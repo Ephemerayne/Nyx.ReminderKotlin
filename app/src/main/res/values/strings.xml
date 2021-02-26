@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Nyx.ReminderKotlin</string>
+    <string name="add_reminder">Добавить напоминание</string>
 </resources>
