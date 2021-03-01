@@ -1,5 +1,6 @@
 package space.lala.nyxreminderkotlin.adapter
 
+import android.content.res.Resources
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -46,16 +47,16 @@ public class ReminderViewHolder(private val binding: ReminderItemBinding) :
         date.text = dateString
         time.text = timeString
 
-        if (reminder.isSelected) {
-            cardView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.dark_grey))
-        } else {
-            cardView.setBackgroundColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    android.R.color.transparent
-                )
-            )
-        }
+//        if (reminder.isSelected) {
+//            cardView.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.dark_grey))
+//        } else {
+//            cardView.setBackgroundColor(
+//                ContextCompat.getColor(
+//                    itemView.context,
+//                    android.R.color.transparent
+//                )
+//            )
+//        }
     }
 
 

@@ -14,6 +14,7 @@
     <color name="light_grey">#E5E5E5</color>
     <color name="dark_grey">#C4C4C4</color>
     <color name="background">#FFF8F4</color>
+    <color name="graphite">#FF3C4444</color>
 
 
 </resources>
