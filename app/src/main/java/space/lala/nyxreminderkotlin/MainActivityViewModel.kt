@@ -15,7 +15,7 @@ public class MainActivityViewModel(application: Application) : AndroidViewModel(
 //
 //    suspend fun updateReminder(reminder: Reminder) = reminderDao.updateReminder(reminder)
 //
-//    suspend fun deleteReminder(id: Int) = reminderDao.deleteReminder(id)
+    suspend fun deleteReminder(id: Int) = reminderDao.deleteReminder(id)
 
     fun getAllReminders() :LiveData<List<Reminder>> = reminderDao.getAllReminders()
 }

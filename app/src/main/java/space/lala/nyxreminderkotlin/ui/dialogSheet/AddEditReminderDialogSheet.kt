@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import org.threeten.bp.*
@@ -34,6 +35,9 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
     companion object {
         public const val ID_KEY = "ID_KEY"
 
+        fun newInstance(id: Int) = ViewReminderDialogSheet().apply {
+            arguments = bundleOf(ID_KEY to id)
+        }
     }
 
     private val dateSetListener =
@@ -83,7 +87,7 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         val reminderTitle = binding.titleEditText.text.toString()
         val reminderDescription = binding.descriptionEditText.text.toString()
         val dateTime : LocalDateTime = LocalDateTime.of(reminderDate, reminderTime)
-        return Reminder(reminderTitle, reminderDescription, dateTime, 5)
+        return Reminder(reminderTitle, reminderDescription, dateTime)
     }
 
     private fun saveReminder(reminder : Reminder) {

@@ -22,7 +22,7 @@ data class Reminder(
     val dateTime: LocalDateTime,
 
     @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    var id: Int? = null,
     var isSelected: Boolean = false
 )
 

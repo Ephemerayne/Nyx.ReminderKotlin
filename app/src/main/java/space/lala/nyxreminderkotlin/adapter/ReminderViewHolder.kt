@@ -8,11 +8,20 @@ import org.threeten.bp.format.DateTimeFormatter
 import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.ReminderItemBinding
 import space.lala.nyxreminderkotlin.model.Reminder
+import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
+import kotlin.coroutines.coroutineContext
 
-public class ReminderViewHolder(private val binding: ReminderItemBinding) :
+public class ReminderViewHolder(
+    private val binding: ReminderItemBinding,
+    private val onReminderListener: OnReminderListener
+) :
     RecyclerView.ViewHolder(binding.root) {
 
+    private var reminderId: Int? = null
+
     fun setItemContent(reminder: Reminder, reminders: ArrayList<Reminder>, position: Int) {
+
+        reminderId = reminder.id
 
         val date = binding.reminderDate
         val title = binding.reminderTitle
@@ -45,7 +54,9 @@ public class ReminderViewHolder(private val binding: ReminderItemBinding) :
         time.text = timeString
 
         if (reminder.isSelected) {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(itemView.context, R.color.dark_grey))
+            cardView.setCardBackgroundColor(
+                ContextCompat.getColor(itemView.context, R.color.dark_grey)
+            )
         } else {
             cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
@@ -54,7 +65,19 @@ public class ReminderViewHolder(private val binding: ReminderItemBinding) :
                 )
             )
         }
+
+        binding.cardViewReminder.setOnClickListener {
+            reminderId?.let { onReminderListener.onReminderClick(it) }
+        }
+
+        binding.cardViewReminder.setOnLongClickListener {
+            onLongClickReminder()
+        }
     }
 
-
+    private fun onLongClickReminder() : Boolean {
+        println("debugg: $reminderId")
+        reminderId?.let { onReminderListener.onReminderLongClick(it) }
+        return true
+    }
 }

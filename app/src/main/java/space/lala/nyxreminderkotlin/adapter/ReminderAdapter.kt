@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import space.lala.nyxreminderkotlin.databinding.ReminderItemBinding
 import space.lala.nyxreminderkotlin.model.Reminder
+import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
 
-class ReminderAdapter : RecyclerView.Adapter<ReminderViewHolder>() {
+class ReminderAdapter(
+    private val onReminderListener: OnReminderListener
+) : RecyclerView.Adapter<ReminderViewHolder>() {
 
     private val reminders: ArrayList<Reminder> = ArrayList()
 
@@ -15,7 +18,10 @@ class ReminderAdapter : RecyclerView.Adapter<ReminderViewHolder>() {
         this.reminders.addAll(reminders)
         this.reminders.sortBy { reminder -> reminder.dateTime }
         notifyDataSetChanged()
+    }
 
+    fun getReminders(): List<Reminder> {
+        return reminders
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
@@ -25,7 +31,7 @@ class ReminderAdapter : RecyclerView.Adapter<ReminderViewHolder>() {
             false
         )
 
-        return ReminderViewHolder(binding)
+        return ReminderViewHolder(binding, onReminderListener)
     }
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
