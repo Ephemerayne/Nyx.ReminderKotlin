@@ -12,9 +12,9 @@ public class MainActivityViewModel(application: Application) : AndroidViewModel(
     val reminderList: LiveData<List<Reminder>> = reminderDao.getAllReminders()
 
     suspend fun insertReminder(reminder: Reminder) = reminderDao.insertReminder(reminder)
-//
-//    suspend fun updateReminder(reminder: Reminder) = reminderDao.updateReminder(reminder)
-//
+
+    suspend fun updateReminder(reminder: Reminder) = reminderDao.updateReminder(reminder)
+
     suspend fun deleteReminder(id: Int) = reminderDao.deleteReminder(id)
 
     fun getAllReminders() :LiveData<List<Reminder>> = reminderDao.getAllReminders()

@@ -24,7 +24,18 @@ data class Reminder(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
     var isSelected: Boolean = false
-)
+) {
+    fun copyWith(
+        title: String? = null,
+        description: String? = null,
+        dateTime: LocalDateTime? = null,
+    ) = Reminder(
+        title = title ?: this.title,
+        description = description ?: this.description,
+        dateTime = dateTime ?: this.dateTime,
+        id = id,
+    )
+}
 
 class DateTimeConverter {
     @TypeConverter

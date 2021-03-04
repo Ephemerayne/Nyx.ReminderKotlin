@@ -1,6 +1,8 @@
 package space.lala.nyxreminderkotlin.adapter
 
+import android.app.TimePickerDialog
 import android.view.View
+import android.widget.TimePicker
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.threeten.bp.LocalDate
@@ -9,6 +11,7 @@ import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.ReminderItemBinding
 import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
+import space.lala.nyxreminderkotlin.utils.showTimePicker
 
 public class ReminderViewHolder(
     private val binding: ReminderItemBinding,
@@ -16,10 +19,18 @@ public class ReminderViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
+    private val timeSetListener =
+        TimePickerDialog.OnTimeSetListener { _: TimePicker, hour: Int, minute: Int ->
+            reminder?.let {
+                onReminderListener.onTimeReminderClick(it, hour, minute)
+            }
+        }
+
     private var reminderId: Int? = null
+    private var reminder: Reminder? = null
 
     fun setItemContent(reminder: Reminder, reminders: ArrayList<Reminder>, position: Int) {
-
+        this.reminder = reminder
         reminderId = reminder.id
 
         val date = binding.reminderDate
@@ -72,10 +83,13 @@ public class ReminderViewHolder(
         binding.cardViewReminder.setOnLongClickListener {
             onLongClickReminder()
         }
+
+        binding.buttonChangeReminderTime.setOnClickListener {
+            showTimePicker(binding.root.context, timeSetListener)
+        }
     }
 
     private fun onLongClickReminder(): Boolean {
-        println("debugg: $reminderId")
         reminderId?.let { onReminderListener.onReminderLongClick(it) }
         return true
     }

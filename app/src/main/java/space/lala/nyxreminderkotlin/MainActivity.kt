@@ -1,12 +1,9 @@
 package space.lala.nyxreminderkotlin
 
-import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
@@ -15,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 import space.lala.nyxreminderkotlin.adapter.ReminderAdapter
 import space.lala.nyxreminderkotlin.databinding.ActivityMainBinding
 import space.lala.nyxreminderkotlin.model.Reminder
@@ -85,7 +84,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         ViewReminderDialogSheet.newInstance(id).show(fragmentTransaction, "OPEN")
     }
 
-    override fun onCreateOptionsMenu(menu: Menu) :Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.actionbar_icon_trashbasket, menu)
         deleteMenuItem = menu.findItem(R.id.icon_trash_basket)
         showDeleteButton(false)
@@ -118,7 +117,6 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
     }
 
     override fun onReminderLongClick(id: Int) {
-        println("debugg: reminder.isSelected}")
         val reminders: ArrayList<Reminder> = ArrayList(adapter.getReminders())
         for (reminder: Reminder in reminders) {
             if (reminder.id == id) {
@@ -129,6 +127,14 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         }
         adapter.setReminders(reminders)
         showDeleteButton(isSelectModeActive)
+    }
+
+    override fun onTimeReminderClick(reminder: Reminder, hour: Int, minute: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val localTime = LocalTime.of(hour, minute)
+            val dateTime = LocalDateTime.of(reminder.dateTime.toLocalDate(), localTime)
+            viewModel.updateReminder(reminder.copyWith(dateTime = dateTime))
+        }
     }
 
     private fun showDeleteButton(willShow: Boolean) {

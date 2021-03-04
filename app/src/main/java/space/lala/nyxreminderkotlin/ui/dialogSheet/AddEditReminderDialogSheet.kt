@@ -19,6 +19,7 @@ import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.AddEditReminderDialogSheetBinding
 import space.lala.nyxreminderkotlin.datasource.repository.ReminderRepository
 import space.lala.nyxreminderkotlin.model.Reminder
+import space.lala.nyxreminderkotlin.utils.showTimePicker
 
 class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dialog_sheet) {
 
@@ -79,7 +80,7 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         }
 
         binding.editTime.setOnClickListener {
-            showTimePicker()
+            context?.let { context -> showTimePicker(context, timeSetListener) }
         }
     }
 
@@ -117,20 +118,6 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
        val localDate : LocalDate = LocalDate.of(year, month, day)
         binding.editDate.text = dateFormatter.format(localDate)
         reminderDate = localDate
-    }
-
-    private fun showTimePicker() {
-        val localTime : LocalTime = LocalTime.now()
-        val hour : Int = localTime.hour
-        val minute : Int = localTime.minute
-
-        val timePickerDialog = TimePickerDialog(
-            context,
-            timeSetListener,
-            hour,
-            minute,
-            true)
-        timePickerDialog.show()
     }
 
     private fun setTime(hour : Int, minute : Int) {
