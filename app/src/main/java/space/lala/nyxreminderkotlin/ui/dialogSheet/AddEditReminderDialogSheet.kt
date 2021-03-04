@@ -35,7 +35,7 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
     companion object {
         public const val ID_KEY = "ID_KEY"
 
-        fun newInstance(id: Int) = ViewReminderDialogSheet().apply {
+        fun newInstance(id: Int) =AddEditReminderDialogSheet().apply {
             arguments = bundleOf(ID_KEY to id)
         }
     }
