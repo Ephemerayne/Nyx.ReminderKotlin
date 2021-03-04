@@ -9,7 +9,6 @@ import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.ReminderItemBinding
 import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
-import kotlin.coroutines.coroutineContext
 
 public class ReminderViewHolder(
     private val binding: ReminderItemBinding,
@@ -30,7 +29,7 @@ public class ReminderViewHolder(
         val cardView = binding.cardViewReminder
 
         if (position > 0) {
-            val previousReminder: Reminder = reminders[position]
+            val previousReminder: Reminder = reminders[position - 1]
             val previousDate: LocalDate = previousReminder.dateTime.toLocalDate()
             val currentDate: LocalDate = reminder.dateTime.toLocalDate()
 
@@ -75,7 +74,7 @@ public class ReminderViewHolder(
         }
     }
 
-    private fun onLongClickReminder() : Boolean {
+    private fun onLongClickReminder(): Boolean {
         println("debugg: $reminderId")
         reminderId?.let { onReminderListener.onReminderLongClick(it) }
         return true
