@@ -13,20 +13,21 @@ import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import org.threeten.bp.*
-import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.AddEditReminderDialogSheetBinding
-import space.lala.nyxreminderkotlin.datasource.repository.ReminderRepository
 import space.lala.nyxreminderkotlin.model.Reminder
+import space.lala.nyxreminderkotlin.utils.dateFormatter
 import space.lala.nyxreminderkotlin.utils.showTimePicker
+import space.lala.nyxreminderkotlin.utils.timeFormatter
 
 class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dialog_sheet) {
 
     private lateinit var binding: AddEditReminderDialogSheetBinding
-
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yy")
-    private val timeFormatter = DateTimeFormatter.ofPattern("HH.mm")
+    private var reminderId: Int? = null
+    private var reminder: Reminder? = null
 
     private var reminderDate = LocalDate.now()
     private var reminderTime = LocalTime.now()
@@ -36,7 +37,7 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
     companion object {
         public const val ID_KEY = "ID_KEY"
 
-        fun newInstance(id: Int) =AddEditReminderDialogSheet().apply {
+        fun newInstance(id: Int) = AddEditReminderDialogSheet().apply {
             arguments = bundleOf(ID_KEY to id)
         }
     }
@@ -64,6 +65,8 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         initListeners()
         fillInDefaultDateTime()
         viewModel = ViewModelProvider(this).get(AddEditReminderDialogViewModel::class.java)
+        reminderId = arguments?.getInt(ID_KEY)
+        reminderId?.let { editReminder(it) }
     }
 
 
@@ -72,7 +75,13 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         binding.buttonCancelEditReminder.setOnClickListener { dismiss() }
 
         binding.buttonSaveReminder.setOnClickListener {
+            if (reminder == null) {
                 saveReminder(createReminder())
+            } else {
+                reminder?.let { updateReminder(it) }
+            }
+
+            dismiss()
         }
 
         binding.editDate.setOnClickListener {
@@ -84,22 +93,40 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         }
     }
 
-    private fun createReminder() : Reminder {
+    private fun createReminder(): Reminder {
         val reminderTitle = binding.titleEditText.text.toString()
         val reminderDescription = binding.descriptionEditText.text.toString()
-        val dateTime : LocalDateTime = LocalDateTime.of(reminderDate, reminderTime)
+        val dateTime: LocalDateTime = LocalDateTime.of(reminderDate, reminderTime)
         return Reminder(reminderTitle, reminderDescription, dateTime)
     }
 
-    private fun saveReminder(reminder : Reminder) {
+    private fun saveReminder(reminder: Reminder) =
         viewModel.insertReminder(reminder)
-        dismiss()
 
+    private fun updateReminder(reminder: Reminder) =
+        viewModel.updateReminder(
+            reminder.copyWith(
+                title = binding.titleEditText.text.toString(),
+                description = binding.descriptionEditText.text.toString(),
+                dateTime = LocalDateTime.of(reminderDate, reminderTime)
+            )
+        )
+
+    private fun editReminder(reminderId: Int) {
+        viewModel.getReminder(reminderId).observe(this, { reminder ->
+            this.reminder = reminder
+            reminder?.let {
+                reminderDate = reminder.dateTime.toLocalDate()
+                reminderTime = reminder.dateTime.toLocalTime()
+                binding.titleEditText.setText(reminder.title)
+                binding.descriptionEditText.setText(reminder.description)
+                binding.editDate.text = reminder.dateTime.toLocalDate().format(dateFormatter)
+                binding.editTime.text = reminder.dateTime.toLocalTime().format(timeFormatter)
+            }
+        })
     }
 
     private fun fillInDefaultDateTime() {
-//        val localDateTime : LocalDateTime = LocalDateTime.now()
-
         val dateString = dateFormatter.format(reminderDate)
         val timeString = timeFormatter.format(reminderTime)
 
@@ -109,19 +136,19 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun showDatePicker() {
-       val datePickerDialog : DatePickerDialog? = context?.let { DatePickerDialog(it) }
+        val datePickerDialog: DatePickerDialog? = context?.let { DatePickerDialog(it) }
         datePickerDialog?.setOnDateSetListener(dateSetListener)
         datePickerDialog?.show()
     }
 
     private fun setDate(year: Int, month: Int, day: Int) {
-       val localDate : LocalDate = LocalDate.of(year, month, day)
+        val localDate: LocalDate = LocalDate.of(year, month, day)
         binding.editDate.text = dateFormatter.format(localDate)
         reminderDate = localDate
     }
 
-    private fun setTime(hour : Int, minute : Int) {
-        val localTime : LocalTime = LocalTime.of(hour, minute)
+    private fun setTime(hour: Int, minute: Int) {
+        val localTime: LocalTime = LocalTime.of(hour, minute)
         binding.editTime.text = timeFormatter.format(localTime)
         reminderTime = localTime
     }

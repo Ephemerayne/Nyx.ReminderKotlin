@@ -11,7 +11,9 @@ import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.ReminderItemBinding
 import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
+import space.lala.nyxreminderkotlin.utils.dateFormatter
 import space.lala.nyxreminderkotlin.utils.showTimePicker
+import space.lala.nyxreminderkotlin.utils.timeFormatter
 
 public class ReminderViewHolder(
     private val binding: ReminderItemBinding,
@@ -53,8 +55,6 @@ public class ReminderViewHolder(
 
         if (position == 0) date.visibility = View.VISIBLE
 
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yy")
-        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
         val dateString: String = dateFormatter.format(reminder.dateTime)
         val timeString: String = timeFormatter.format(reminder.dateTime)
 
