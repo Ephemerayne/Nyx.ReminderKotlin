@@ -97,7 +97,10 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.icon_trash_basket -> deleteReminders()
+            R.id.icon_trash_basket -> {
+                deleteReminders()
+                disableSelectMode()
+            }
             else -> return false
         }
         return true
@@ -175,7 +178,6 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
     }
 
     private fun disableSelectMode() {
-        itemsToRemove.clear()
         setSelectModeActive()
         showDeleteButton(false)
 
