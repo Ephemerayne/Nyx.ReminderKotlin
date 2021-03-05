@@ -8,4 +8,6 @@ public interface OnReminderListener {
     fun onReminderLongClick(id: Int)
 
     fun onTimeReminderClick(reminder: Reminder, hour: Int, minute: Int)
+
+    fun onNotificationIconClick(reminder: Reminder)
 }

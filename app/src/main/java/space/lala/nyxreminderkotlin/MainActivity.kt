@@ -137,6 +137,14 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         }
     }
 
+    override fun onNotificationIconClick(reminder: Reminder) {
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.updateReminder(
+                reminder.copyWith(isNotificationActive = !reminder.isNotificationActive)
+            )
+        }
+    }
+
     private fun showDeleteButton(willShow: Boolean) {
         deleteMenuItem.isVisible = willShow
         deleteMenuItem.isEnabled = willShow

@@ -6,7 +6,6 @@ import android.widget.TimePicker
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.ReminderItemBinding
 import space.lala.nyxreminderkotlin.model.Reminder
@@ -21,18 +20,9 @@ public class ReminderViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
-    private val timeSetListener =
-        TimePickerDialog.OnTimeSetListener { _: TimePicker, hour: Int, minute: Int ->
-            reminder?.let {
-                onReminderListener.onTimeReminderClick(it, hour, minute)
-            }
-        }
-
     private var reminderId: Int? = null
-    private var reminder: Reminder? = null
 
     fun setItemContent(reminder: Reminder, reminders: ArrayList<Reminder>, position: Int) {
-        this.reminder = reminder
         reminderId = reminder.id
 
         val date = binding.reminderDate
@@ -76,6 +66,10 @@ public class ReminderViewHolder(
             )
         }
 
+        binding.notificationIcon.setOnClickListener {
+            onReminderListener.onNotificationIconClick(reminder)
+        }
+
         binding.cardViewReminder.setOnClickListener {
             reminderId?.let { onReminderListener.onReminderClick(it) }
         }
@@ -85,12 +79,27 @@ public class ReminderViewHolder(
         }
 
         binding.buttonChangeReminderTime.setOnClickListener {
-            showTimePicker(binding.root.context, timeSetListener)
+            showTimePicker(binding.root.context, getTimeSetListener(reminder))
         }
+
+        setNotificationIcon(reminder)
     }
 
     private fun onLongClickReminder(): Boolean {
         reminderId?.let { onReminderListener.onReminderLongClick(it) }
         return true
     }
+
+    private fun setNotificationIcon(reminder: Reminder) {
+        if (reminder.isNotificationActive) {
+            binding.notificationIcon.setImageResource(R.drawable.icon_notification_active)
+        } else {
+            binding.notificationIcon.setImageResource(R.drawable.icon_notification_inactive)
+        }
+    }
+
+    private fun getTimeSetListener(reminder: Reminder) =
+        TimePickerDialog.OnTimeSetListener { _: TimePicker, hour: Int, minute: Int ->
+            onReminderListener.onTimeReminderClick(reminder, hour, minute)
+        }
 }

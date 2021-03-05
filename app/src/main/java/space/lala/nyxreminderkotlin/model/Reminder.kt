@@ -23,17 +23,20 @@ data class Reminder(
 
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    var isNotificationActive: Boolean = true
 ) {
     fun copyWith(
         title: String? = null,
         description: String? = null,
         dateTime: LocalDateTime? = null,
+        isNotificationActive: Boolean? = null
     ) = Reminder(
         title = title ?: this.title,
         description = description ?: this.description,
         dateTime = dateTime ?: this.dateTime,
         id = id,
+        isNotificationActive = isNotificationActive ?: this.isNotificationActive
     )
 }
 
