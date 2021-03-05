@@ -1,17 +1,14 @@
 package space.lala.nyxreminderkotlin.datasource.repository
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import space.lala.nyxreminderkotlin.datasource.local.database.RemindersDatabase
+import space.lala.nyxreminderkotlin.datasource.local.database.ReminderDao
 import space.lala.nyxreminderkotlin.model.Reminder
+import javax.inject.Inject
 
-class ReminderRepository(
-    application: Application
-) {
-    private val reminderDao = RemindersDatabase.getDatabase(application).reminderDao()
+class ReminderRepository @Inject constructor(private val reminderDao: ReminderDao) {
     fun insertReminder(reminder: Reminder) = CoroutineScope(Dispatchers.IO).launch {
         reminderDao.insertReminder(reminder)
     }

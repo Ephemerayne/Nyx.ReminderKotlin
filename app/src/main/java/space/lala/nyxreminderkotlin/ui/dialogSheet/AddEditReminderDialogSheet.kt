@@ -12,18 +12,22 @@ import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
+import space.lala.nyxreminderkotlin.App
 import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.AddEditReminderDialogSheetBinding
 import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.utils.dateFormatter
 import space.lala.nyxreminderkotlin.utils.showTimePicker
 import space.lala.nyxreminderkotlin.utils.timeFormatter
+import javax.inject.Inject
 
 class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dialog_sheet) {
+
+    @Inject
+    lateinit var viewModel: AddEditReminderDialogViewModel
 
     private lateinit var binding: AddEditReminderDialogSheetBinding
     private var reminderId: Int? = null
@@ -31,8 +35,6 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
 
     private var reminderDate = LocalDate.now()
     private var reminderTime = LocalTime.now()
-
-    private lateinit var viewModel: AddEditReminderDialogViewModel
 
     companion object {
         public const val ID_KEY = "ID_KEY"
@@ -62,9 +64,9 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity?.application as App).reminderComponent.inject(this)
         initListeners()
         fillInDefaultDateTime()
-        viewModel = ViewModelProvider(this).get(AddEditReminderDialogViewModel::class.java)
         reminderId = arguments?.getInt(ID_KEY)
         reminderId?.let { editReminder(it) }
     }

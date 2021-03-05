@@ -1,21 +1,17 @@
 package space.lala.nyxreminderkotlin
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import space.lala.nyxreminderkotlin.datasource.local.database.ReminderDao
-import space.lala.nyxreminderkotlin.datasource.local.database.RemindersDatabase
+import androidx.lifecycle.ViewModel
+import space.lala.nyxreminderkotlin.datasource.repository.ReminderRepository
 import space.lala.nyxreminderkotlin.model.Reminder
+import javax.inject.Inject
 
-public class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
-    private val reminderDao : ReminderDao = RemindersDatabase.getDatabase(application).reminderDao()
-    val reminderList: LiveData<List<Reminder>> = reminderDao.getAllReminders()
+public class MainActivityViewModel @Inject constructor(
+    private val repository: ReminderRepository
+) : ViewModel() {
+    fun updateReminder(reminder: Reminder) = repository.updateReminder(reminder)
 
-    suspend fun insertReminder(reminder: Reminder) = reminderDao.insertReminder(reminder)
+    fun deleteReminder(id: Int) = repository.deleteReminder(id)
 
-    suspend fun updateReminder(reminder: Reminder) = reminderDao.updateReminder(reminder)
-
-    suspend fun deleteReminder(id: Int) = reminderDao.deleteReminder(id)
-
-    fun getAllReminders() :LiveData<List<Reminder>> = reminderDao.getAllReminders()
+    fun getAllReminders(): LiveData<List<Reminder>> = repository.getAllReminders()
 }

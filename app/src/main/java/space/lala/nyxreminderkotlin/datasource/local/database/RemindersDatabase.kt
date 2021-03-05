@@ -11,6 +11,7 @@ import space.lala.nyxreminderkotlin.model.Reminder
 @Database(entities = [Reminder::class], version = 1)
 @TypeConverters(DateTimeConverter::class)
 public abstract class RemindersDatabase : RoomDatabase() {
+
     companion object {
         private var instance: RemindersDatabase? = null
         private const val DB_NAME = "reminders.db"

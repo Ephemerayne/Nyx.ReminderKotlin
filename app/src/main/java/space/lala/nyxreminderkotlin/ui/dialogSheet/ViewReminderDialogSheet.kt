@@ -6,18 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import space.lala.nyxreminderkotlin.App
 import space.lala.nyxreminderkotlin.MainActivity
 import space.lala.nyxreminderkotlin.R
 import space.lala.nyxreminderkotlin.databinding.ViewReminderDialogSheetBinding
 import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.utils.dateFormatter
 import space.lala.nyxreminderkotlin.utils.timeFormatter
+import javax.inject.Inject
 
 class ViewReminderDialogSheet : DialogFragment() {
 
+    @Inject
+    lateinit var viewModel: ViewReminderDialogViewModel
+
     private lateinit var binding: ViewReminderDialogSheetBinding
-    private lateinit var viewModel: ViewReminderDialogViewModel
     private var reminderId: Int? = null
 
     companion object {
@@ -35,7 +38,7 @@ class ViewReminderDialogSheet : DialogFragment() {
     ) = ViewReminderDialogSheetBinding.inflate(inflater).also { binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(ViewReminderDialogViewModel::class.java)
+        (activity?.application as App).reminderComponent.inject(this)
         reminderId = arguments?.getInt(ID_KEY)
         reminderId?.let { id ->
             viewModel.getReminder(id).observe(this, { reminder ->

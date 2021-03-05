@@ -7,7 +7,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,9 +19,13 @@ import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.ui.dialogSheet.AddEditReminderDialogSheet
 import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
 import space.lala.nyxreminderkotlin.ui.dialogSheet.ViewReminderDialogSheet
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnReminderListener {
-    private lateinit var viewModel: MainActivityViewModel
+
+    @Inject
+    lateinit var viewModel: MainActivityViewModel
+
     private lateinit var binding: ActivityMainBinding
     private val adapter: ReminderAdapter = ReminderAdapter(this)
 
@@ -33,12 +36,13 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        (application as App).reminderComponent.inject(this)
+
         ActivityMainBinding.inflate(layoutInflater).also {
             binding = it
             setContentView(it.root)
         }
-
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
         binding.recyclerViewReminders.layoutManager = LinearLayoutManager(this)
 
