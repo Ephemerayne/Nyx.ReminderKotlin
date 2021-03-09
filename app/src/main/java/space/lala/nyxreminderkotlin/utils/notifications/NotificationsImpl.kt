@@ -1,4 +1,4 @@
-package space.lala.nyxreminderkotlin.utils
+package space.lala.nyxreminderkotlin.utils.notifications
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -44,7 +44,6 @@ class NotificationsImpl @Inject constructor(private val application: Application
         val builder = NotificationCompat.Builder(application, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(reminder.title)
-//            .setContentText(reminder.description)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(
                     reminder.description

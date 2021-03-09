@@ -1,4 +1,4 @@
-package space.lala.nyxreminderkotlin.utils
+package space.lala.nyxreminderkotlin.utils.notifications
 
 import space.lala.nyxreminderkotlin.model.Reminder
 
