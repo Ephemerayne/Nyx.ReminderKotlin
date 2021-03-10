@@ -14,6 +14,7 @@ import space.lala.nyxreminderkotlin.utils.dateFormatter
 import space.lala.nyxreminderkotlin.utils.showTimePicker
 import space.lala.nyxreminderkotlin.utils.timeFormatter
 
+
 public class ReminderViewHolder(
     private val binding: ReminderItemBinding,
     private val onReminderListener: OnReminderListener
@@ -48,8 +49,8 @@ public class ReminderViewHolder(
         val dateString: String = dateFormatter.format(reminder.dateTime)
         val timeString: String = timeFormatter.format(reminder.dateTime)
 
-        title.text = reminder.title
-        description.text = reminder.description
+        title.text = reminder.title.trim()
+        description.text = reminder.description.trim()
         date.text = dateString
         time.text = timeString
 

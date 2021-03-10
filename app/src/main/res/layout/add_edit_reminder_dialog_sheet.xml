@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/rounded_dialog"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:orientation="vertical">
 
         <EditText
@@ -17,6 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.App.Base"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/dark_blue"
             android:ems="10"
             android:gravity="top"
             android:hint="@string/hint_title_dialog"
@@ -27,12 +30,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.App.Base"
+            android:backgroundTint="@color/dark_blue"
             android:ems="10"
             android:gravity="top"
             android:hint="@string/hint_description_dialog"
             android:inputType="textMultiLine"
-            android:lines="3"
-            android:textSize="16sp" />
+            android:lines="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,11 +49,11 @@
             android:theme="@style/Theme.NyxReminderKotlin.ButtonTimeReminder"
             android:textColor="@color/graphite"
             android:backgroundTint="@color/white"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:cornerRadius="10dp"
             android:layout_marginEnd="36dp"
             tools:text="DATE" />
@@ -60,11 +63,11 @@
             android:theme="@style/Theme.NyxReminderKotlin.ButtonTimeReminder"
             android:textColor="@color/graphite"
             android:backgroundTint="@color/white"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:cornerRadius="10dp"
             tools:text="TIME" />
     </LinearLayout>
@@ -72,6 +75,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -83,6 +87,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
             android:text="@string/save_button_dialog"
+            android:textStyle="bold"
             android:textSize="15sp" />
 
         <com.google.android.material.button.MaterialButton
@@ -94,6 +99,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:text="@string/cancel_button_dialog"
+            android:textStyle="bold"
             android:textSize="15sp" />
     </LinearLayout>
 
