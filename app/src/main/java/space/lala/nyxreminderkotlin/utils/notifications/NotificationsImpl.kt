@@ -1,59 +1,52 @@
 package space.lala.nyxreminderkotlin.utils.notifications
 
+import android.app.Activity
+import android.app.AlarmManager
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import space.lala.nyxreminderkotlin.R
+import org.threeten.bp.ZoneOffset
 import space.lala.nyxreminderkotlin.model.Reminder
-import space.lala.nyxreminderkotlin.ui.dialogSheet.ViewReminderDialogSheet
 import javax.inject.Inject
 
 class NotificationsImpl @Inject constructor(private val application: Application) : Notifications {
-
-    companion object {
-        private const val CHANNEL_ID = "CHANNEL_ID"
-    }
-
-    override fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "ChannelName"
-            val description = "ChannelDescription"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                this.description = description
-            }
-            val notificationManager: NotificationManager = application.getSystemService(
-                Context.NOTIFICATION_SERVICE
-            ) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
     override fun sendNotification(reminder: Reminder) {
-        val intent = Intent(application, ViewReminderDialogSheet::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(application, 0, intent, 0)
+        setNotification(
+            title = reminder.title,
+            description = reminder.description,
+            notificationId = reminder.id ?: 0,
+            notificationTimeInMillis = reminder.dateTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
+            context = application,
+        )
+    }
 
-        val builder = NotificationCompat.Builder(application, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(reminder.title)
-            .setStyle(
-                NotificationCompat.BigTextStyle().bigText(
-                    reminder.description
-                )
-            )
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    private fun setNotification(
+        title: String,
+        description: String,
+        notificationId: Int,
+        notificationTimeInMillis: Long,
+        context: Context
+    ) {
+        val alarmManager = context.getSystemService(Activity.ALARM_SERVICE) as AlarmManager
 
-        with(NotificationManagerCompat.from(application)) {
-            notify(reminder.id ?: 0, builder.build())
-        }
+        val alarmIntent = Intent(context.applicationContext, AlarmReceiver::class.java)
+
+        alarmIntent.putExtra(NotificationsService.NOTIFICATION_TITLE, title)
+        alarmIntent.putExtra(NotificationsService.NOTIFICATION_DESCRIPTION, description)
+        alarmIntent.putExtra(NotificationsService.NOTIFICATION_ID, notificationId)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            alarmIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT,
+        )
+
+        alarmManager.set(
+            AlarmManager.RTC_WAKEUP,
+            notificationTimeInMillis,
+            pendingIntent,
+        )
     }
 }
