@@ -17,5 +17,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".utils.notifications.AlarmReceiver"
+            android:enabled="true" />
+
+        <service
+            android:name=".utils.notifications.NotificationsService"
+            android:enabled="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 </manifest>

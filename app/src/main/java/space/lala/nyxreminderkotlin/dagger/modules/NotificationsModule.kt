@@ -3,8 +3,8 @@ package space.lala.nyxreminderkotlin.dagger.modules
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import space.lala.nyxreminderkotlin.utils.Notifications
-import space.lala.nyxreminderkotlin.utils.NotificationsImpl
+import space.lala.nyxreminderkotlin.utils.notifications.Notifications
+import space.lala.nyxreminderkotlin.utils.notifications.NotificationsImpl
 import javax.inject.Singleton
 
 @Module

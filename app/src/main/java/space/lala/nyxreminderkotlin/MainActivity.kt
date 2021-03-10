@@ -20,12 +20,16 @@ import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.ui.dialogSheet.AddEditReminderDialogSheet
 import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
 import space.lala.nyxreminderkotlin.ui.dialogSheet.ViewReminderDialogSheet
+import space.lala.nyxreminderkotlin.utils.notifications.Notifications
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnReminderListener {
 
     @Inject
     lateinit var viewModel: MainActivityViewModel
+
+    @Inject
+    lateinit var notifications: Notifications
 
     private lateinit var binding: ActivityMainBinding
     private val adapter: ReminderAdapter = ReminderAdapter(this)
@@ -50,6 +54,8 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         binding.recyclerViewReminders.adapter = adapter
 
         viewModel.getAllReminders().observe(this, { reminders ->
+            setRemindersNotifications(reminders)
+
             if (reminders.isNotEmpty()) {
                 binding.recyclerViewReminders.visibility = View.VISIBLE
                 binding.addReminderButton.visibility = View.GONE
@@ -206,4 +212,9 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         }
         adapter.setReminders(reminders)
     }
+
+    private fun setRemindersNotifications(reminders: List<Reminder>) =
+        reminders
+            .filter { it.dateTime.isAfter(LocalDateTime.now()) }
+            .forEach { notifications.sendNotification(it) }
 }
