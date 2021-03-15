@@ -1,6 +1,7 @@
 package space.lala.nyxreminderkotlin.utils.notifications
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -31,7 +32,30 @@ class NotificationsService : JobIntentService() {
         }
     }
 
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "ChannelName"
+            val description = "ChannelDescription"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+
+            val channel =
+                NotificationChannel(CHANNEL_ID, name, importance).apply {
+                    this.description = description
+                    enableVibration(true)
+                    enableLights(true)
+                    lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                }
+
+            val notificationManager: NotificationManager = application.getSystemService(
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager
+
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
     override fun onHandleWork(intent: Intent) {
+        createChannel()
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
