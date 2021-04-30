@@ -1,9 +1,11 @@
 package space.lala.nyxreminderkotlin.ui.dialogSheet
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import space.lala.nyxreminderkotlin.App
@@ -46,6 +48,12 @@ class ViewReminderDialogSheet : DialogFragment() {
             })
         }
         initListeners()
+
+        context?.let {
+            dialog?.window?.setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(it, android.R.color.transparent))
+            )
+        }
     }
 
     private fun initListeners() {
@@ -61,8 +69,8 @@ class ViewReminderDialogSheet : DialogFragment() {
     }
 
     private fun setReminderData(reminder: Reminder) {
-        binding.viewDialogTitle.text = reminder.title
-        binding.viewDialogDescription.text = reminder.description
+        binding.viewDialogTitle.text = reminder.title.trim()
+        binding.viewDialogDescription.text = reminder.description.trim()
 
         val dateString = reminder.dateTime.toLocalDate().format(dateFormatter)
         val timeString = reminder.dateTime.toLocalTime().format(timeFormatter)

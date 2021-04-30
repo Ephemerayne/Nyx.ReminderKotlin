@@ -2,6 +2,7 @@ package space.lala.nyxreminderkotlin.ui.dialogSheet
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import org.threeten.bp.LocalDate
@@ -69,6 +71,12 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         fillInDefaultDateTime()
         reminderId = arguments?.getInt(ID_KEY)
         reminderId?.let { editReminder(it) }
+
+        context?.let {
+            dialog?.window?.setBackgroundDrawable(
+                ColorDrawable(ContextCompat.getColor(it, android.R.color.transparent))
+            )
+        }
     }
 
 
@@ -77,13 +85,23 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
         binding.buttonCancelEditReminder.setOnClickListener { dismiss() }
 
         binding.buttonSaveReminder.setOnClickListener {
-            if (reminder == null) {
-                saveReminder(createReminder())
+
+            val reminderTitle = binding.titleEditText.text.toString()
+            if (reminderTitle.trim().isEmpty()) {
+                binding.titleEditText.setText("")
+                binding.titleEditText.setHint(R.string.empty_title)
+                binding.titleEditText.setHintTextColor(resources.getColor(R.color.red))
             } else {
-                reminder?.let { updateReminder(it) }
+
+                if (reminder == null) {
+                    saveReminder(createReminder())
+                } else {
+                    reminder?.let { updateReminder(it) }
+                }
+
+                dismiss()
             }
 
-            dismiss()
         }
 
         binding.editDate.setOnClickListener {
@@ -96,8 +114,8 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
     }
 
     private fun createReminder(): Reminder {
-        val reminderTitle = binding.titleEditText.text.toString()
-        val reminderDescription = binding.descriptionEditText.text.toString()
+        val reminderTitle = binding.titleEditText.text.toString().trim()
+        val reminderDescription = binding.descriptionEditText.text.toString().trim()
         val dateTime: LocalDateTime = LocalDateTime.of(reminderDate, reminderTime)
         return Reminder(reminderTitle, reminderDescription, dateTime)
     }
