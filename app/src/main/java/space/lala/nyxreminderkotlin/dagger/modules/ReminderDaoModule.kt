@@ -7,7 +7,7 @@ import space.lala.nyxreminderkotlin.datasource.local.database.RemindersDatabase
 import javax.inject.Singleton
 
 @Module
-public class  ReminderDaoModule {
+class  ReminderDaoModule {
 
     @Singleton
     @Provides

@@ -40,7 +40,7 @@ class NotificationsImpl @Inject constructor(private val application: Application
             context,
             0,
             alarmIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT,
+            0,
         )
 
         alarmManager.set(

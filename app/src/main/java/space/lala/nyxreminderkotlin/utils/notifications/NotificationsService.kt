@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.JobIntentService
+import androidx.core.app.NotificationCompat
 import space.lala.nyxreminderkotlin.MainActivity
 import space.lala.nyxreminderkotlin.R
 
@@ -47,8 +48,7 @@ class NotificationsService : JobIntentService() {
                 }
 
             val notificationManager: NotificationManager = application.getSystemService(
-                Context.NOTIFICATION_SERVICE
-            ) as NotificationManager
+                NotificationManager::class.java)
 
             notificationManager.createNotificationChannel(channel)
         }
@@ -74,19 +74,14 @@ class NotificationsService : JobIntentService() {
             PendingIntent.FLAG_UPDATE_CURRENT,
         )
 
-        val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(this, CHANNEL_ID)
-        } else {
-            // TODO: попробовать избавиться
-            Notification.Builder(this)
-        }.run {
-            setContentIntent(pendingIntent)
-            setSmallIcon(R.drawable.delete_icon)
-            setContentTitle(title)
-            setContentText(desc)
-            build()
-        }
+        val builder =
+            NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.delete_icon)
+                .setContentTitle(title)
+                .setContentText(desc)
+                .build()
 
-        notificationManager.notify(id, notification)
+        notificationManager.notify(id, builder)
     }
 }
