@@ -196,6 +196,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         CoroutineScope(Dispatchers.IO).launch {
             for (id: Int in itemsToRemove) {
                 viewModel.deleteReminder(id)
+                notifications.cancelNotification(id)
             }
         }
     }

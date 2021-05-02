@@ -5,7 +5,7 @@
     <string name="hint_description_dialog">Описание</string>
     <string name="save_button_dialog">Сохранить</string>
     <string name="cancel_button_dialog">Отмена</string>
-    <string name="delete_icon">Удалить</string>
+    <string name="delete_icon">Удалить напоминания</string>
     <string name="change">Изменить</string>
 
     <string name="on_date_in_time">%s в %s</string>
