@@ -38,13 +38,13 @@ class NotificationsImpl @Inject constructor(private val application: Application
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            notificationId,
             alarmIntent,
             0,
         )
 
         alarmManager.set(
-            AlarmManager.RTC_WAKEUP,
+            AlarmManager.RTC,
             notificationTimeInMillis,
             pendingIntent,
         )

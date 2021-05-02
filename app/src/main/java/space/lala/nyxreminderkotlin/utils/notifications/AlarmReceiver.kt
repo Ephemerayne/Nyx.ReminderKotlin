@@ -9,23 +9,23 @@ import androidx.annotation.RequiresApi
 class AlarmReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context?, intent: Intent?) {
-        val service = Intent(context, NotificationsService::class.java)
+        val serviceIntent = Intent(context, NotificationsService::class.java)
 
         intent?.run {
-            service.putExtra(
+            serviceIntent.putExtra(
                 NotificationsService.NOTIFICATION_TITLE,
                 getStringExtra(NotificationsService.NOTIFICATION_TITLE),
             )
-            service.putExtra(
+            serviceIntent.putExtra(
                 NotificationsService.NOTIFICATION_DESCRIPTION,
                 getStringExtra(NotificationsService.NOTIFICATION_DESCRIPTION),
             )
-            service.putExtra(
+            serviceIntent.putExtra(
                 NotificationsService.NOTIFICATION_ID,
                 getIntExtra(NotificationsService.NOTIFICATION_ID, 0),
             )
         }
 
-        context?.let { NotificationsService.enqueueWork(it, service) }
+        context?.let { NotificationsService.enqueueWork(it, serviceIntent) }
     }
 }
