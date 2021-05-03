@@ -40,6 +40,8 @@ public class MainActivityViewModel @Inject constructor(
         }
     }
 
+    fun cancelNotification(id: Int) = notifications.cancelNotification(id)
+
     fun deleteReminders() {
         CoroutineScope(Dispatchers.IO).launch {
             for (id: Int in itemsToRemove) {
@@ -69,6 +71,6 @@ public class MainActivityViewModel @Inject constructor(
 
     fun setRemindersNotifications(reminders: List<Reminder>) =
         reminders
-            .filter { it.dateTime.isAfter(LocalDateTime.now()) }
+            .filter { it.dateTime.isAfter(LocalDateTime.now()) && it.isNotificationActive }
             .forEach { notifications.sendNotification(it) }
 }

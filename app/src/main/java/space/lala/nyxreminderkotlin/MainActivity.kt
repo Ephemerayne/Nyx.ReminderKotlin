@@ -162,7 +162,13 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
     override fun onNotificationIconClick(reminder: Reminder) {
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.updateReminder(
-                reminder.copyWith(isNotificationActive = !reminder.isNotificationActive)
+                reminder.copyWith(
+                    isNotificationActive = !reminder.isNotificationActive
+                ).apply {
+                    if (!isNotificationActive) {
+                        id?.let { viewModel.cancelNotification(it) }
+                    }
+                }
             )
         }
     }
