@@ -16,6 +16,9 @@ interface ReminderDao {
     @Query("SELECT * FROM reminders_table")
     fun getAllReminders(): LiveData<List<Reminder>>
 
+    @Query("SELECT * FROM reminders_table")
+    fun getAllRemindersSync(): List<Reminder>
+
     @Query("DELETE FROM reminders_table WHERE id =:id")
     fun deleteReminder(id: Int)
 

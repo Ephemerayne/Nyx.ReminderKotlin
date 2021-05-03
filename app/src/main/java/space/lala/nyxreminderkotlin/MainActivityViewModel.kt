@@ -1,17 +1,74 @@
 package space.lala.nyxreminderkotlin
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDateTime
 import space.lala.nyxreminderkotlin.datasource.repository.ReminderRepository
 import space.lala.nyxreminderkotlin.model.Reminder
+import space.lala.nyxreminderkotlin.utils.notifications.Notifications
 import javax.inject.Inject
 
 public class MainActivityViewModel @Inject constructor(
-    private val repository: ReminderRepository
+    private val repository: ReminderRepository,
+    private val notifications: Notifications
 ) : ViewModel() {
+
+    private val itemsToRemove = ArrayList<Int>()
+    val isSelectModeActive = MutableLiveData<Boolean>().apply {
+        value = false
+    }
+
     fun updateReminder(reminder: Reminder) = repository.updateReminder(reminder)
 
-    fun deleteReminder(id: Int) = repository.deleteReminder(id)
+    private fun deleteReminder(id: Int) = repository.deleteReminder(id)
 
     fun getAllReminders(): LiveData<List<Reminder>> = repository.getAllReminders()
+
+    fun setSelectModeActive() {
+        isSelectModeActive.value = itemsToRemove.isNotEmpty()
+    }
+
+    fun manageItemsToRemove(reminder: Reminder) {
+        if (reminder.isSelected) {
+            reminder.id?.let { itemsToRemove.add(it) }
+        } else {
+            itemsToRemove.remove(reminder.id)
+        }
+    }
+
+    fun deleteReminders() {
+        CoroutineScope(Dispatchers.IO).launch {
+            for (id: Int in itemsToRemove) {
+                deleteReminder(id)
+                notifications.cancelNotification(id)
+            }
+            disableSelectMode()
+        }
+    }
+
+    fun disableSelectMode() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val reminders = repository.getAllRemindersSync()
+            for (reminder: Reminder in reminders) {
+                if (reminder.isSelected) {
+                    reminder.isSelected = !reminder.isSelected
+                }
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+                setSelectModeActive()
+            }
+        }
+
+        itemsToRemove.clear()
+    }
+
+    fun setRemindersNotifications(reminders: List<Reminder>) =
+        reminders
+            .filter { it.dateTime.isAfter(LocalDateTime.now()) }
+            .forEach { notifications.sendNotification(it) }
 }

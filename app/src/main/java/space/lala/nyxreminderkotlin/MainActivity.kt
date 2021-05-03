@@ -20,7 +20,6 @@ import space.lala.nyxreminderkotlin.model.Reminder
 import space.lala.nyxreminderkotlin.ui.dialogSheet.AddEditReminderDialogSheet
 import space.lala.nyxreminderkotlin.ui.dialogSheet.OnReminderListener
 import space.lala.nyxreminderkotlin.ui.dialogSheet.ViewReminderDialogSheet
-import space.lala.nyxreminderkotlin.utils.notifications.Notifications
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnReminderListener {
@@ -28,16 +27,10 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
     @Inject
     lateinit var viewModel: MainActivityViewModel
 
-    @Inject
-    lateinit var notifications: Notifications
-
     private lateinit var binding: ActivityMainBinding
     private val adapter: ReminderAdapter = ReminderAdapter(this)
 
-    private lateinit var deleteMenuItem: MenuItem
-
-    private val itemsToRemove = ArrayList<Int>()
-    private var isSelectModeActive: Boolean = false
+    private var deleteMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         binding.recyclerViewReminders.adapter = adapter
 
         viewModel.getAllReminders().observe(this, { reminders ->
-            setRemindersNotifications(reminders)
+            viewModel.setRemindersNotifications(reminders)
 
             if (reminders.isNotEmpty()) {
                 binding.recyclerViewReminders.visibility = View.VISIBLE
@@ -70,12 +63,11 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
 
         binding.floatingButtonAddReminder.setOnClickListener {
             openAddEditReminderDialog()
-            disableSelectMode()
+            viewModel.disableSelectMode()
         }
 
         binding.addReminderButton.setOnClickListener {
             openAddEditReminderDialog()
-            disableSelectMode()
         }
 
         binding.recyclerViewReminders.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -85,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
                     binding.floatingButtonAddReminder.hide()
                 }
             }
+
             @Override
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -92,6 +85,11 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
                 }
                 super.onScrollStateChanged(recyclerView, newState)
             }
+        })
+
+        viewModel.isSelectModeActive.observe(this, { willShow ->
+            deleteMenuItem?.isVisible = willShow
+            deleteMenuItem?.isEnabled = willShow
         })
     }
 
@@ -114,36 +112,31 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.actionbar_icon_trashbasket, menu)
         deleteMenuItem = menu.findItem(R.id.icon_trash_basket)
-        showDeleteButton(false)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.icon_trash_basket -> {
-                deleteReminders()
-                disableSelectMode()
-            }
+            R.id.icon_trash_basket -> viewModel.deleteReminders()
             else -> return false
         }
         return true
     }
 
     override fun onReminderClick(id: Int) {
-        if (!isSelectModeActive) {
+        if (viewModel.isSelectModeActive.value == false) {
             openViewReminderDialog(id)
             return
         }
         val reminders: ArrayList<Reminder> = ArrayList(adapter.getReminders())
         for (reminder: Reminder in reminders) {
-            if (isSelectModeActive && reminder.id == id) {
+            if (viewModel.isSelectModeActive.value == true && reminder.id == id) {
                 reminder.isSelected = !reminder.isSelected
-                manageItemsToRemove(reminder)
-                setSelectModeActive()
+                viewModel.manageItemsToRemove(reminder)
+                viewModel.setSelectModeActive()
             }
         }
         adapter.setReminders(reminders)
-        showDeleteButton(isSelectModeActive)
     }
 
     override fun onReminderLongClick(id: Int) {
@@ -151,12 +144,11 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         for (reminder: Reminder in reminders) {
             if (reminder.id == id) {
                 reminder.isSelected = !reminder.isSelected
-                manageItemsToRemove(reminder)
-                setSelectModeActive()
+                viewModel.manageItemsToRemove(reminder)
+                viewModel.setSelectModeActive()
             }
         }
         adapter.setReminders(reminders)
-        showDeleteButton(isSelectModeActive)
     }
 
     override fun onTimeReminderClick(reminder: Reminder, hour: Int, minute: Int) {
@@ -174,48 +166,4 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
             )
         }
     }
-
-    private fun showDeleteButton(willShow: Boolean) {
-        deleteMenuItem.isVisible = willShow
-        deleteMenuItem.isEnabled = willShow
-    }
-
-    private fun setSelectModeActive() {
-        isSelectModeActive = itemsToRemove.isNotEmpty()
-    }
-
-    private fun manageItemsToRemove(reminder: Reminder) {
-        if (reminder.isSelected) {
-            reminder.id?.let { itemsToRemove.add(it) }
-        } else {
-            itemsToRemove.remove(reminder.id)
-        }
-    }
-
-    private fun deleteReminders() {
-        CoroutineScope(Dispatchers.IO).launch {
-            for (id: Int in itemsToRemove) {
-                viewModel.deleteReminder(id)
-                notifications.cancelNotification(id)
-            }
-        }
-    }
-
-    private fun disableSelectMode() {
-        setSelectModeActive()
-        showDeleteButton(false)
-
-        val reminders: ArrayList<Reminder> = ArrayList(adapter.getReminders())
-        for (reminder: Reminder in reminders) {
-            if (reminder.isSelected) {
-                reminder.isSelected = !reminder.isSelected
-            }
-        }
-        adapter.setReminders(reminders)
-    }
-
-    private fun setRemindersNotifications(reminders: List<Reminder>) =
-        reminders
-            .filter { it.dateTime.isAfter(LocalDateTime.now()) }
-            .forEach { notifications.sendNotification(it) }
 }

@@ -25,6 +25,8 @@ class ReminderRepository @Inject constructor(private val reminderDao: ReminderDa
         return reminderDao.getAllReminders()
     }
 
+    fun getAllRemindersSync(): List<Reminder> = reminderDao.getAllRemindersSync()
+
     fun deleteReminder(id: Int) = CoroutineScope(Dispatchers.IO).launch {
         reminderDao.deleteReminder(id)
     }
