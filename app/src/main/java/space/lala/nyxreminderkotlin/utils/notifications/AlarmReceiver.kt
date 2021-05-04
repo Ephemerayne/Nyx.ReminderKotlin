@@ -1,5 +1,7 @@
 package space.lala.nyxreminderkotlin.utils.notifications
 
+import android.app.Activity
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -41,15 +43,28 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if (receivedAction == ACTION_DELETE) {
             context?.let {
-                CoroutineScope(Dispatchers.IO).launch {
-                    RemindersDatabase.getDatabase(it)
-                        .reminderDao()
-                        .deleteReminder(intent.getIntExtra(NotificationsService.NOTIFICATION_ID, 0))
-                }
+                deleteReminderFromDatabase(it, intent)
+                cancelNotification(it, intent)
             }
             return
         }
 
         context?.let { NotificationsService.enqueueWork(it, serviceIntent) }
+    }
+
+    private fun deleteReminderFromDatabase(context: Context, intent: Intent) {
+        context.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                RemindersDatabase.getDatabase(it)
+                    .reminderDao()
+                    .deleteReminder(intent.getIntExtra(NotificationsService.NOTIFICATION_ID, 0))
+            }
+        }
+    }
+
+    private fun cancelNotification(context: Context, intent: Intent) {
+        val notificationManager =
+            context.getSystemService(Activity.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(intent.getIntExtra(NotificationsService.NOTIFICATION_ID, 0))
     }
 }
