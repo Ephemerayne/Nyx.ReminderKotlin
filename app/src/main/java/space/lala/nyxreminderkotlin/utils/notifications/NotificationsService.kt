@@ -90,7 +90,7 @@ class NotificationsService: JobIntentService() {
         val builder =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.delete_icon)
+                .setSmallIcon(R.drawable.icon_notification)
                 .setContentTitle(title)
                 .setContentText(desc)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
