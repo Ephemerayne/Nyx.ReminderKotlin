@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="space.lala.nyxreminderkotlin">
+    package="com.ephemerayne.reminder">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".App"
+        android:name="com.ephemerayne.reminder.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NyxReminderKotlin">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.ephemerayne.reminder.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,11 +21,11 @@
         </activity>
 
         <receiver
-            android:name=".utils.notifications.AlarmReceiver"
+            android:name="com.ephemerayne.reminder.utils.notifications.AlarmReceiver"
             android:enabled="true" />
 
         <service
-            android:name=".utils.notifications.NotificationsService"
+            android:name="com.ephemerayne.reminder.utils.notifications.NotificationsService"
             android:enabled="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

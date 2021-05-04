@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Nyx.ReminderKotlin</string>
+    <string name="app_name">Напоминания</string>
     <string name="add_reminder">Добавить напоминание</string>
     <string name="hint_title_dialog">Название</string>
     <string name="hint_description_dialog">Описание</string>

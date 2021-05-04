@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reminders</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="hint_title_dialog">Title</string>
+    <string name="hint_description_dialog">Description</string>
+    <string name="save_button_dialog">Save</string>
+    <string name="cancel_button_dialog">Cancel</string>
+    <string name="delete_icon">Delete reminders</string>
+    <string name="change">Edit</string>
+    <string name="on_date_in_time">%s in %s</string>
+    <string name="delete_reminder">Delete reminder</string>
+    <string name="empty_title">Fill title field</string>
+</resources>
