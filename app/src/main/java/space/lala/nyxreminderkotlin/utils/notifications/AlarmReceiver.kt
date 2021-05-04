@@ -5,6 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import space.lala.nyxreminderkotlin.datasource.local.database.RemindersDatabase
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -15,8 +19,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context?, intent: Intent?) {
-
-        val receivedAction = intent?.action
 
         val serviceIntent = Intent(context, NotificationsService::class.java)
 
@@ -35,11 +37,16 @@ class AlarmReceiver : BroadcastReceiver() {
             )
         }
 
+        val receivedAction = intent?.action
+
         if (receivedAction == ACTION_DELETE) {
-            println("deleted")
-            return
-        } else if (receivedAction == ACTION_CLOSE) {
-            println("closed")
+            context?.let {
+                CoroutineScope(Dispatchers.IO).launch {
+                    RemindersDatabase.getDatabase(it)
+                        .reminderDao()
+                        .deleteReminder(intent.getIntExtra(NotificationsService.NOTIFICATION_ID, 0))
+                }
+            }
             return
         }
 

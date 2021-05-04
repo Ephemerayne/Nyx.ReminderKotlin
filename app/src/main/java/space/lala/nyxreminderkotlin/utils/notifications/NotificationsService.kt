@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import space.lala.nyxreminderkotlin.MainActivity
 import space.lala.nyxreminderkotlin.R
 
-class NotificationsService : JobIntentService() {
+class NotificationsService: JobIntentService() {
 
     companion object {
         const val CHANNEL_ID = "CHANNEL_ID"
@@ -77,25 +77,14 @@ class NotificationsService : JobIntentService() {
 
         val deleteIntent = Intent(this, AlarmReceiver::class.java).apply {
             action = AlarmReceiver.ACTION_DELETE
-            putExtra(NOTIFICATION_ID, 0)
+            putExtra(NOTIFICATION_ID, id)
         }
 
         val deletePendingIntent = PendingIntent.getBroadcast(
             this,
-            0,
+            id,
             deleteIntent,
-            0
-        )
-
-        val closeIntent = Intent(this, AlarmReceiver::class.java).apply {
-            action = AlarmReceiver.ACTION_CLOSE
-        }
-
-        val closePendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            closeIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+           0
         )
 
         val builder =
@@ -111,11 +100,6 @@ class NotificationsService : JobIntentService() {
                     R.drawable.delete_icon,
                     getString(R.string.delete_reminder),
                     deletePendingIntent
-                )
-                .addAction(
-                    R.drawable.icon_dialog_close,
-                    getString(R.string.cancel_button_dialog),
-                    closePendingIntent
                 )
                 .build()
 
