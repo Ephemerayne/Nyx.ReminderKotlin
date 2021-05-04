@@ -48,7 +48,8 @@ class NotificationsService : JobIntentService() {
                 }
 
             val notificationManager: NotificationManager = application.getSystemService(
-                NotificationManager::class.java)
+                NotificationManager::class.java
+            )
 
             notificationManager.createNotificationChannel(channel)
         }
@@ -74,12 +75,48 @@ class NotificationsService : JobIntentService() {
             PendingIntent.FLAG_UPDATE_CURRENT,
         )
 
+        val deleteIntent = Intent(this, AlarmReceiver::class.java).apply {
+            action = AlarmReceiver.ACTION_DELETE
+            putExtra(NOTIFICATION_ID, 0)
+        }
+
+        val deletePendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            deleteIntent,
+            0
+        )
+
+        val closeIntent = Intent(this, AlarmReceiver::class.java).apply {
+            action = AlarmReceiver.ACTION_CLOSE
+        }
+
+        val closePendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            closeIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
         val builder =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.delete_icon)
                 .setContentTitle(title)
                 .setContentText(desc)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .addAction(
+                    R.drawable.delete_icon,
+                    getString(R.string.delete_reminder),
+                    deletePendingIntent
+                )
+                .addAction(
+                    R.drawable.icon_dialog_close,
+                    getString(R.string.cancel_button_dialog),
+                    closePendingIntent
+                )
                 .build()
 
         notificationManager.notify(id, builder)

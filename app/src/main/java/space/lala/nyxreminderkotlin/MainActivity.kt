@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         ViewReminderDialogSheet.newInstance(id).show(fragmentTransaction, "OPEN")
     }
 
+    //TODO поменять иконку
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.actionbar_icon_trashbasket, menu)
         deleteMenuItem = menu.findItem(R.id.icon_trash_basket)
