@@ -160,6 +160,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
     }
 
     override fun onNotificationIconClick(reminder: Reminder) {
+        if (viewModel.isSelectModeActive.value == true) return
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.updateReminder(
                 reminder.copyWith(
