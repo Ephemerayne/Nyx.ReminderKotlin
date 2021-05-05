@@ -31,6 +31,7 @@ public class ReminderViewHolder(
         val description = binding.reminderDescription
         val time = binding.buttonChangeReminderTime
         val cardView = binding.cardViewReminder
+        val notificationIcon = binding.notificationIcon
 
         if (position > 0) {
             val previousReminder: Reminder = reminders[position - 1]
@@ -67,22 +68,25 @@ public class ReminderViewHolder(
             )
         }
 
-        binding.notificationIcon.setOnClickListener {
+        notificationIcon.setOnClickListener {
             onReminderListener.onNotificationIconClick(reminder)
         }
 
-        binding.cardViewReminder.setOnClickListener {
+        cardView.setOnClickListener {
             reminderId?.let { onReminderListener.onReminderClick(it) }
         }
 
-        binding.cardViewReminder.setOnLongClickListener {
+        cardView.setOnLongClickListener {
             onLongClickReminder()
         }
 
-        binding.buttonChangeReminderTime.setOnClickListener {
-            showTimePicker(binding.root.context, getTimeSetListener(reminder))
+        time.setOnClickListener {
+           if (!reminder.isSelected) {
+               time.isFocusable= true
+               showTimePicker(binding.root.context, getTimeSetListener(reminder))
+           } else
+               time.isFocusable= false
         }
-
         setNotificationIcon(reminder)
     }
 
