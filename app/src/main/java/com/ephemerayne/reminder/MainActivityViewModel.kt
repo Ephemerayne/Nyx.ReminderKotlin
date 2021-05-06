@@ -17,6 +17,7 @@ public class MainActivityViewModel @Inject constructor(
     private val notifications: Notifications
 ) : ViewModel() {
 
+    var lastClickedReminder: Reminder? = null
     private val itemsToRemove = ArrayList<Int>()
     val isSelectModeActive = MutableLiveData<Boolean>().apply {
         value = false

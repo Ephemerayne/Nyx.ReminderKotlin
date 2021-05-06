@@ -1,9 +1,11 @@
 package com.ephemerayne.reminder
 
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
@@ -15,6 +17,7 @@ import com.ephemerayne.reminder.model.Reminder
 import com.ephemerayne.reminder.ui.dialogSheet.AddEditReminderDialogSheet
 import com.ephemerayne.reminder.ui.dialogSheet.OnReminderListener
 import com.ephemerayne.reminder.ui.dialogSheet.ViewReminderDialogSheet
+import com.ephemerayne.reminder.utils.showTimePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +25,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), OnReminderListener {
+class MainActivity : AppCompatActivity(), OnReminderListener, TimePickerDialog.OnTimeSetListener {
 
     @Inject
     lateinit var viewModel: MainActivityViewModel
@@ -151,11 +154,20 @@ class MainActivity : AppCompatActivity(), OnReminderListener {
         adapter.setReminders(reminders)
     }
 
+
     override fun onTimeReminderClick(reminder: Reminder, hour: Int, minute: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val localTime = LocalTime.of(hour, minute)
-            val dateTime = LocalDateTime.of(reminder.dateTime.toLocalDate(), localTime)
-            viewModel.updateReminder(reminder.copyWith(dateTime = dateTime))
+        if (viewModel.isSelectModeActive.value == true) return
+        viewModel.lastClickedReminder = reminder
+        showTimePicker(binding.root.context, this)
+    }
+
+    override fun onTimeSet(view: TimePicker?, hour: Int, minute: Int) {
+        viewModel.lastClickedReminder?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                val localTime = LocalTime.of(hour, minute)
+                val dateTime = LocalDateTime.of(it.dateTime.toLocalDate(), localTime)
+                viewModel.updateReminder(it.copyWith(dateTime = dateTime))
+            }
         }
     }
 

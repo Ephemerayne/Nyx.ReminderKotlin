@@ -1,8 +1,6 @@
 package com.ephemerayne.reminder.adapter
 
-import android.app.TimePickerDialog
 import android.view.View
-import android.widget.TimePicker
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ephemerayne.reminder.R
@@ -10,7 +8,6 @@ import com.ephemerayne.reminder.databinding.ReminderItemBinding
 import com.ephemerayne.reminder.model.Reminder
 import com.ephemerayne.reminder.ui.dialogSheet.OnReminderListener
 import com.ephemerayne.reminder.utils.dateFormatter
-import com.ephemerayne.reminder.utils.showTimePicker
 import com.ephemerayne.reminder.utils.timeFormatter
 import org.threeten.bp.LocalDate
 
@@ -81,11 +78,11 @@ public class ReminderViewHolder(
         }
 
         time.setOnClickListener {
-           if (!reminder.isSelected) {
-               time.isFocusable= true
-               showTimePicker(binding.root.context, getTimeSetListener(reminder))
-           } else
-               time.isFocusable= false
+            onReminderListener.onTimeReminderClick(
+                reminder,
+                reminder.dateTime.hour,
+                reminder.dateTime.minute
+            )
         }
         setNotificationIcon(reminder)
     }
@@ -102,9 +99,4 @@ public class ReminderViewHolder(
             binding.notificationIcon.setImageResource(R.drawable.icon_notification_inactive)
         }
     }
-
-    private fun getTimeSetListener(reminder: Reminder) =
-        TimePickerDialog.OnTimeSetListener { _: TimePicker, hour: Int, minute: Int ->
-            onReminderListener.onTimeReminderClick(reminder, hour, minute)
-        }
 }
