@@ -59,6 +59,7 @@ public class MainActivityViewModel @Inject constructor(
             for (reminder: Reminder in reminders) {
                 if (reminder.isSelected) {
                     reminder.isSelected = !reminder.isSelected
+
                 }
             }
 
@@ -66,7 +67,6 @@ public class MainActivityViewModel @Inject constructor(
                 setSelectModeActive()
             }
         }
-
         itemsToRemove.clear()
     }
 

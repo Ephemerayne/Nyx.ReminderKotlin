@@ -11,4 +11,5 @@
     <string name="on_date_in_time">%s в %s</string>
     <string name="empty_title">Заполните название</string>
     <string name="delete_reminder">Удалить напоминание</string>
+    <string name="set_notification">Установить уведомление</string>
 </resources>

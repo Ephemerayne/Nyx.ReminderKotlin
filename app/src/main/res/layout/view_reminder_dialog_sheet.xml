@@ -54,6 +54,7 @@
         android:layout_marginBottom="10dp"
         android:textColor="@color/graphite"
         android:textSize="18sp"
+        android:visibility="gone"
         tools:text="DESCRIPTION" />
 
     <Button

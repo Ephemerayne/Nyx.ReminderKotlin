@@ -76,8 +76,8 @@ class ViewReminderDialogSheet : DialogFragment() {
         val timeString = reminder.dateTime.toLocalTime().format(timeFormatter)
         binding.viewDateTime.text = getString(R.string.on_date_in_time, dateString, timeString)
 
-        if (reminder.description.isEmpty()) {
-            binding.viewDialogDescription.visibility = View.GONE
+        if (reminder.description.isNotEmpty()) {
+            binding.viewDialogDescription.visibility = View.VISIBLE
         }
     }
 }

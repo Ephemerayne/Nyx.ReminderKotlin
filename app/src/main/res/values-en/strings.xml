@@ -11,4 +11,5 @@
     <string name="on_date_in_time">%s in %s</string>
     <string name="delete_reminder">Delete reminder</string>
     <string name="empty_title">Fill title field</string>
+    <string name="set_notification">Set notification</string>
 </resources>
