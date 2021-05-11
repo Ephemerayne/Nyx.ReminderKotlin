@@ -6,7 +6,7 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Intent
 import com.ephemerayne.reminder.model.Reminder
-import org.threeten.bp.ZoneOffset
+import org.threeten.bp.OffsetDateTime
 import javax.inject.Inject
 
 class NotificationsImpl @Inject constructor(private val application: Application) : Notifications {
@@ -19,7 +19,9 @@ class NotificationsImpl @Inject constructor(private val application: Application
             title = reminder.title,
             description = reminder.description,
             notificationId = reminder.id ?: 0,
-            notificationTimeInMillis = reminder.dateTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+            notificationTimeInMillis = reminder.dateTime
+                .toInstant(OffsetDateTime.now().offset)
+                .toEpochMilli()
         )
     }
 
