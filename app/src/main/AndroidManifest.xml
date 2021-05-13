@@ -11,7 +11,8 @@
         android:icon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.NyxReminderKotlin">
-        <activity android:name="com.ephemerayne.reminder.MainActivity">
+        <activity android:name="com.ephemerayne.reminder.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
