@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity(), OnReminderListener, TimePickerDialog.O
             deleteMenuItem?.isVisible = willShow
             deleteMenuItem?.isEnabled = willShow
             binding.floatingButtonAddReminder.isVisible = !willShow
+
         })
     }
 
