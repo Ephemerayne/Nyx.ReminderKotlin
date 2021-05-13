@@ -12,4 +12,5 @@
     <string name="empty_title">Заполните название</string>
     <string name="delete_reminder">Удалить напоминание</string>
     <string name="set_notification">Установить уведомление</string>
+    <string name="close">Закрыть</string>
 </resources>

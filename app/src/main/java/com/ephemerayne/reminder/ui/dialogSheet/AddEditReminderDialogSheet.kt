@@ -39,7 +39,7 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
     private var reminderTime = LocalTime.now()
 
     companion object {
-        public const val ID_KEY = "ID_KEY"
+        const val ID_KEY = "ID_KEY"
 
         fun newInstance(id: Int) = AddEditReminderDialogSheet().apply {
             arguments = bundleOf(ID_KEY to id)
@@ -88,9 +88,11 @@ class AddEditReminderDialogSheet : DialogFragment(R.layout.add_edit_reminder_dia
 
             val reminderTitle = binding.titleEditText.text.toString()
             if (reminderTitle.trim().isEmpty()) {
-                binding.titleEditText.setText("")
-                binding.titleEditText.setHint(R.string.empty_title)
-                binding.titleEditText.setHintTextColor(resources.getColor(R.color.red))
+                with(binding.titleEditText) {
+                    setText("")
+                    setHint(R.string.empty_title)
+                    setHintTextColor(ContextCompat.getColor(context, R.color.red))
+                }
             } else {
 
                 if (reminder == null) {

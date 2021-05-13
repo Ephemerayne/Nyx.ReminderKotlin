@@ -2,6 +2,7 @@ package com.ephemerayne.reminder.ui.dialogSheet
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ class ViewReminderDialogSheet : DialogFragment() {
     private var reminderId: Int? = null
 
     companion object {
-        public const val ID_KEY = "ID_KEY"
+        const val ID_KEY = "ID_KEY"
 
         fun newInstance(id: Int) = ViewReminderDialogSheet().apply {
             arguments = bundleOf(ID_KEY to id)
@@ -70,7 +71,10 @@ class ViewReminderDialogSheet : DialogFragment() {
 
     private fun setReminderData(reminder: Reminder) {
         binding.viewDialogTitle.text = reminder.title.trim()
-        binding.viewDialogDescription.text = reminder.description.trim()
+        with(binding.viewDialogDescription) {
+            text = reminder.description.trim()
+            movementMethod = ScrollingMovementMethod()
+        }
 
         val dateString = reminder.dateTime.toLocalDate().format(dateFormatter)
         val timeString = reminder.dateTime.toLocalTime().format(timeFormatter)

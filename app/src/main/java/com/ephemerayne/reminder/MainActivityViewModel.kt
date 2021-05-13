@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ephemerayne.reminder.datasource.repository.ReminderRepository
 import com.ephemerayne.reminder.model.Reminder
-import com.ephemerayne.reminder.utils.notifications.Notifications
+import com.ephemerayne.reminder.notifications.Notifications
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
-public class MainActivityViewModel @Inject constructor(
+class MainActivityViewModel @Inject constructor(
     private val repository: ReminderRepository,
     private val notifications: Notifications
 ) : ViewModel() {
@@ -53,7 +53,7 @@ public class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun disableSelectMode() {
+    private fun disableSelectMode() {
         CoroutineScope(Dispatchers.IO).launch {
             val reminders = repository.getAllRemindersSync()
             for (reminder: Reminder in reminders) {

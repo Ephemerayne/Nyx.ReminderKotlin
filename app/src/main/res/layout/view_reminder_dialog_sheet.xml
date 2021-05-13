@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -21,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:background="#00FFFFFF"
-            app:srcCompat="@drawable/icon_dialog_close" />
+            app:srcCompat="@drawable/icon_dialog_close"
+            android:contentDescription="@string/close" />
 
         <TextView
             android:id="@+id/view_date_time"
@@ -41,30 +41,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginHorizontal="16dp"
         android:textColor="@color/graphite"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="TITLE" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/view_dialog_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="10dp"
         android:textColor="@color/graphite"
         android:textSize="18sp"
+        android:maxLines="10"
+        android:scrollbars="vertical"
         android:visibility="gone"
         tools:text="DESCRIPTION" />
-
+    </ScrollView>
     <Button
         android:id="@+id/view_dialog_button_edit"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="24dp"
         android:text="@string/change"
         android:textStyle="bold"
         android:textSize="15sp" />

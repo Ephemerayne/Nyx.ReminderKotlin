@@ -1,8 +1,8 @@
 package com.ephemerayne.reminder.dagger.modules
 
 import android.app.Application
-import com.ephemerayne.reminder.utils.notifications.Notifications
-import com.ephemerayne.reminder.utils.notifications.NotificationsImpl
+import com.ephemerayne.reminder.notifications.Notifications
+import com.ephemerayne.reminder.notifications.NotificationsImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

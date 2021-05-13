@@ -14,10 +14,12 @@ class ReminderAdapter(
     private val reminders: ArrayList<Reminder> = ArrayList()
 
     fun setReminders(reminders: List<Reminder>) {
-        this.reminders.clear()
-        this.reminders.addAll(reminders)
-        this.reminders.sortBy { reminder -> reminder.dateTime }
-        notifyDataSetChanged()
+        with(this.reminders) {
+            clear()
+            addAll(reminders)
+            sortBy { reminder -> reminder.dateTime }
+            notifyDataSetChanged()
+        }
     }
 
     fun getReminders(): List<Reminder> {

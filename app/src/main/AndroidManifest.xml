@@ -20,11 +20,11 @@
         </activity>
 
         <receiver
-            android:name="com.ephemerayne.reminder.utils.notifications.AlarmReceiver"
+            android:name="com.ephemerayne.reminder.notifications.AlarmReceiver"
             android:enabled="true" />
 
         <service
-            android:name="com.ephemerayne.reminder.utils.notifications.NotificationsService"
+            android:name="com.ephemerayne.reminder.notifications.NotificationsService"
             android:enabled="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

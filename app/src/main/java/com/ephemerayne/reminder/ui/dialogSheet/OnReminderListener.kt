@@ -2,7 +2,7 @@ package com.ephemerayne.reminder.ui.dialogSheet
 
 import com.ephemerayne.reminder.model.Reminder
 
-public interface OnReminderListener {
+interface OnReminderListener {
     fun onReminderClick(id: Int)
 
     fun onReminderLongClick(id: Int)

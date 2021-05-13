@@ -1,4 +1,4 @@
-package com.ephemerayne.reminder.utils.notifications
+package com.ephemerayne.reminder.notifications
 
 import android.app.Activity
 import android.app.NotificationManager

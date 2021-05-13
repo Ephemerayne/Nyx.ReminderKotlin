@@ -12,7 +12,7 @@ import com.ephemerayne.reminder.utils.timeFormatter
 import org.threeten.bp.LocalDate
 
 
-public class ReminderViewHolder(
+class ReminderViewHolder(
     private val binding: ReminderItemBinding,
     private val onReminderListener: OnReminderListener
 ) :
