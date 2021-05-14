@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,7 +76,8 @@ class MainActivity : AppCompatActivity(), OnReminderListener, TimePickerDialog.O
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0 || dy < 0 && binding.floatingButtonAddReminder.isShown
-                    && viewModel.isSelectModeActive.value == true) {
+                    && viewModel.isSelectModeActive.value == true
+                ) {
                     binding.floatingButtonAddReminder.hide()
                 }
             }
@@ -85,7 +85,8 @@ class MainActivity : AppCompatActivity(), OnReminderListener, TimePickerDialog.O
             @Override
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE
-                    && viewModel.isSelectModeActive.value == false) {
+                    && viewModel.isSelectModeActive.value == false
+                ) {
                     binding.floatingButtonAddReminder.show()
                 }
                 super.onScrollStateChanged(recyclerView, newState)
@@ -93,10 +94,21 @@ class MainActivity : AppCompatActivity(), OnReminderListener, TimePickerDialog.O
         })
 
         viewModel.isSelectModeActive.observe(this, { willShow ->
-            deleteMenuItem?.isVisible = willShow
-            deleteMenuItem?.isEnabled = willShow
-            binding.floatingButtonAddReminder.isVisible = !willShow
+//TODO пофиксить floating action button
+            if (!willShow) {
+                binding.floatingButtonAddReminder.show()
 
+            } else {
+                binding.floatingButtonAddReminder.hide()
+
+            }
+
+            deleteMenuItem?.let {
+                with(it) {
+                    isVisible = willShow
+                    isEnabled = willShow
+                }
+            }
         })
     }
 
