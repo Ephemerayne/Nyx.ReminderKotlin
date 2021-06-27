@@ -37,7 +37,7 @@ class NotificationsService: JobIntentService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "ChannelName"
             val description = "ChannelDescription"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
 
             val channel =
                 NotificationChannel(CHANNEL_ID, name, importance).apply {
@@ -93,7 +93,7 @@ class NotificationsService: JobIntentService() {
                 .setSmallIcon(R.drawable.icon_notification)
                 .setContentTitle(title)
                 .setContentText(desc)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .addAction(
